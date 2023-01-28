@@ -3,6 +3,7 @@
 use eframe::egui;
 use egui::plot::{Line, Plot, PlotPoints};
 use std::error::Error;
+use std::time::Instant;
 
 fn main() {
     let options = eframe::NativeOptions {
@@ -16,10 +17,20 @@ fn main() {
     );
 }
 
-#[derive(Default)]
 struct MyApp {
     allowed_to_close: bool,
     show_confirmation_dialog: bool,
+    start: Instant,
+}
+
+impl Default for MyApp {
+    fn default() -> Self {
+        Self {
+            allowed_to_close: false,
+            show_confirmation_dialog: true,
+            start: Instant::now(),
+        }
+    }
 }
 
 impl eframe::App for MyApp {
@@ -34,7 +45,7 @@ impl eframe::App for MyApp {
 
             let sin: PlotPoints = (0..1000)
                 .map(|i| {
-                    let x = i as f64 * 0.01;
+                    let x = i as f64 * 0.01 + self.start.elapsed().as_secs_f64();
                     [x, x.sin()]
                 })
                 .collect();
