@@ -2,7 +2,6 @@
 
 use eframe::egui;
 use egui::plot::{Line, Plot, PlotPoints};
-use std::error::Error;
 use std::time::Instant;
 
 fn main() {
@@ -11,7 +10,7 @@ fn main() {
         ..Default::default()
     };
     eframe::run_native(
-        "Confirm exit",
+        "I am watching this for the plot",
         options,
         Box::new(|_cc| Box::new(MyApp::default())),
     );
@@ -27,7 +26,7 @@ impl Default for MyApp {
     fn default() -> Self {
         Self {
             allowed_to_close: false,
-            show_confirmation_dialog: true,
+            show_confirmation_dialog: false,
             start: Instant::now(),
         }
     }
@@ -43,7 +42,7 @@ impl eframe::App for MyApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             //ui.heading("Try to close the window");
 
-            let sin: PlotPoints = (0..1000)
+            let sin: PlotPoints = (0..10000)
                 .map(|i| {
                     let x = i as f64 * 0.01 + self.start.elapsed().as_secs_f64();
                     [x, x.sin()]
@@ -73,5 +72,6 @@ impl eframe::App for MyApp {
                     });
                 });
         }
+        ctx.request_repaint();
     }
 }
